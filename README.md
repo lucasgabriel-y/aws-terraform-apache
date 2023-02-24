@@ -2,7 +2,7 @@
 Projeto para subir um webserver Apache numa instância AWS EC2 com Terraform
 
 
-![Diagrama](https://devopsrealtime.com/wp-content/uploads/2022/05/Webapp.png)
+![Projeto Base](https://devopsrealtime.com/wp-content/uploads/2022/05/Webapp.png)
 
 ## Etapas de execução:
 ###  Infraestrutura:
