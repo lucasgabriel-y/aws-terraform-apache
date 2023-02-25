@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-2"
+  region = var.region
 }
 
 #Cria o recurso para usar uma chave de acesso  
@@ -11,8 +11,8 @@ resource "aws_key_pair" "key-pair" {
 
 #Cria a instancia EC2
 resource "aws_instance" "terraform" {
-  ami                         = "ami-0cc87e5027adcdca8"
-  instance_type               = "t2.micro"
+  ami                         = var.ami
+  instance_type               = var.instance_type
   subnet_id                   = aws_subnet.public_subnet.id
   vpc_security_group_ids      = [aws_security_group.public_security_group.id]
   associate_public_ip_address = true
@@ -23,14 +23,16 @@ resource "aws_instance" "terraform" {
     Name = "Apache terraform"
   }
 
+#Promove o acesso SSH a instancia
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
       host        = self.public_ip
-      user        = "ec2-user"
+      user        = var.user_ssh
       private_key = file("/apache-key")
     }
 
+#Promove a instalação de recursos na instancia
     inline = [
       "sudo yum update -y",
       "sudo yum install -y httpd",
@@ -50,6 +52,7 @@ resource "aws_eip" "eip" {
   instance = aws_instance.terraform.id
 }
 
+#Exibe o IP publico associado
 output "IP" {
   value = aws_eip.eip.public_ip
 
